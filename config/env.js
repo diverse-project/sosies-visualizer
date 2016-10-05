@@ -6,9 +6,9 @@ var REACT_APP = /^REACT_APP_/i;
 function getClientEnvironment(publicUrl) {
   return Object
     .keys(process.env)
-    .filter(key => REACT_APP.test(key))
-    .reduce((env, key) => {
-      env['process.env.' + key] = JSON.stringify(process.env[key]);
+    .filter(function filterHandler(key) { return REACT_APP.test(key); })
+    .reduce(function reduceHandler(env, key) {
+      env['process.env.' + key] = JSON.stringify(process.env[key]); // eslint-disable-line no-param-reassign
       return env;
     }, {
       // Useful for determining whether we’re running in production mode.

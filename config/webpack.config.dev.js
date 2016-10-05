@@ -88,7 +88,7 @@ module.exports = {
       {
         test: /\.(js|jsx)$/,
         loader: 'eslint',
-        include: paths.appSrc,
+        include: paths.appSrc
       }
     ],
     loaders: [
@@ -112,7 +112,7 @@ module.exports = {
       {
         test: /\.css$/,
         loader: 'style!css?modules',
-        include: /flexboxgrid/,
+        include: /flexboxgrid/
       },
       // "postcss" loader applies autoprefixer to our CSS.
       // "css" loader resolves paths in CSS and adds assets as dependencies.
@@ -154,16 +154,16 @@ module.exports = {
   },
 
   // We use PostCSS for autoprefixing only.
-  postcss: function() {
+  postcss: function postCssHandler() {
     return [
       autoprefixer({
         browsers: [
           '>1%',
           'last 4 versions',
           'Firefox ESR',
-          'not ie < 9', // React doesn't support IE8 anyway
+          'not ie < 9' // React doesn't support IE8 anyway
         ]
-      }),
+      })
     ];
   },
   plugins: [
@@ -176,7 +176,7 @@ module.exports = {
     // Generates an `index.html` file with the <script> injected.
     new HtmlWebpackPlugin({
       inject: true,
-      template: paths.appHtml,
+      template: paths.appHtml
     }),
     // Makes some environment variables available to the JS code, for example:
     // if (process.env.NODE_ENV === 'development') { ... }. See `./env.js`.

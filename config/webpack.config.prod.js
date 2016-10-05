@@ -1,4 +1,3 @@
-var path = require('path');
 var autoprefixer = require('autoprefixer');
 var webpack = require('webpack');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
@@ -8,15 +7,14 @@ var url = require('url');
 var paths = require('./paths');
 var getClientEnvironment = require('./env');
 
-function ensureSlash(path, needsSlash) {
-  var hasSlash = path.endsWith('/');
+function ensureSlash(p, needsSlash) {
+  var hasSlash = p.endsWith('/');
   if (hasSlash && !needsSlash) {
-    return path.substr(path, path.length - 1);
+    return p.substr(p, p.length - 1);
   } else if (!hasSlash && needsSlash) {
-    return path + '/';
-  } else {
-    return path;
+    return p + '/';
   }
+  return p;
 }
 
 // We use "homepage" field to infer "public path" at which the app is served.
@@ -85,7 +83,7 @@ module.exports = {
       'react-native': 'react-native-web'
     }
   },
-  
+
   module: {
     // First, run the linter.
     // It's important to do this before Babel processes the JS.
@@ -101,8 +99,8 @@ module.exports = {
       {
         test: /\.(js|jsx)$/,
         include: paths.appSrc,
-        loader: 'babel',
-        
+        loader: 'babel'
+
       },
       // The notation here is somewhat confusing.
       // "postcss" loader applies autoprefixer to our CSS.
@@ -156,18 +154,18 @@ module.exports = {
       }
     ]
   },
-  
+
   // We use PostCSS for autoprefixing only.
-  postcss: function() {
+  postcss: function postCssHandler() {
     return [
       autoprefixer({
         browsers: [
           '>1%',
           'last 4 versions',
           'Firefox ESR',
-          'not ie < 9', // React doesn't support IE8 anyway
+          'not ie < 9' // React doesn't support IE8 anyway
         ]
-      }),
+      })
     ];
   },
   plugins: [

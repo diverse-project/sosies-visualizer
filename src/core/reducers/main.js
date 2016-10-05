@@ -1,6 +1,6 @@
 import {
   WS_OPEN, WS_CLOSE, WS_ERROR, PARSE_ERROR, UPDATE_CLIENTS, UPDATE_CLIENT,
-  UNKNOWN_MSG, CLIENT_CLOSE,
+  UNKNOWN_MSG, CLIENT_CLOSE, TOGGLE_CLIENT, NEW_CLIENT,
 } from '../actions';
 import { arrayReplace } from '../utils';
 
@@ -43,6 +43,12 @@ export default (state = initialState, action) => {
         error: action.error,
       };
 
+    case NEW_CLIENT:
+      return {
+        ...state,
+        clients: [...state.clients, action.client],
+      };
+
     case UPDATE_CLIENTS:
       return {
         ...state,
@@ -56,10 +62,21 @@ export default (state = initialState, action) => {
       };
 
     case CLIENT_CLOSE:
-      const client = state.clients.find(i => i.id === action.id);
       return {
         ...state,
-        clients: arrayReplace(state.clients, { ...client, closed: true }),
+        clients: arrayReplace(state.clients, {
+          ...action.client,
+          closed: true,
+        }),
+      };
+
+    case TOGGLE_CLIENT:
+      return {
+        ...state,
+        clients: arrayReplace(state.clients, {
+          ...action.client,
+          selected: !action.client.selected,
+        }),
       };
 
     case UNKNOWN_MSG:

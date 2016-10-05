@@ -1,0 +1,10 @@
+---
+root: true
+env:
+  browser: false
+  node: true
+parser: espree
+extends: airbnb-base/legacy
+rules:
+  no-console: 0
+  vars-on-top: 0

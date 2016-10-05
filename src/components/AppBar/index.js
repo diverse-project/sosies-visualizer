@@ -11,7 +11,7 @@ const AppBarComp = ({ connected }) => (
     showMenuIconButton={false}
     iconElementRight={
       <FlatButton
-        label={connected ? 'Connected':'Disconnected'}
+        label={connected ? 'Connected' : 'Disconnected'}
         labelPosition="before"
         icon={connected ? <ConnectedIcon /> : <DisconnectedIcon />}
         disabled
