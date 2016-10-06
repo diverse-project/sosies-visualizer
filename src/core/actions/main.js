@@ -1,6 +1,6 @@
 import {
   WS_OPEN, WS_CLOSE, PARSE_ERROR, UPDATE_CLIENTS, UNKNOWN_MSG, UPDATE_CLIENT,
-  CLIENT_CLOSE, TOGGLE_CLIENT, NEW_CLIENT,
+  CLIENT_CLOSE, TOGGLE_CLIENT, NEW_CLIENT, CHANGE_TAB,
 } from '.';
 
 export function connect() {
@@ -22,7 +22,7 @@ export function connect() {
         const msg = JSON.parse(event.data);
         switch (msg.type) {
           case 'REGISTER':
-            dispatch({ type: NEW_CLIENT, client: { id: msg.id } });
+            dispatch({ type: NEW_CLIENT, client: { id: msg.id, port: msg.port } });
             break;
 
           case 'ALL_DATA':
@@ -30,10 +30,13 @@ export function connect() {
             break;
 
           case 'DATA':
-            dispatch({
-              type: UPDATE_CLIENT,
-              client: { id: msg.id, data: msg.data },
-            });
+            let c = clients.find(i => i.id === msg.id);
+            if (c) {
+              c = { ...c, data: msg.data };
+            } else {
+              c = { id: msg.id, data: msg.data };
+            }
+            dispatch({ type: UPDATE_CLIENT, client: c });
             break;
 
           case 'CLOSE':
@@ -51,29 +54,57 @@ export function connect() {
         if (error instanceof SyntaxError) {
           dispatch({ type: PARSE_ERROR, error });
         } else {
-          console.error(error.stack);
+          throw error;
         }
       }
     };
   };
 }
 
-export function toggleClient(client) {
-  return { type: TOGGLE_CLIENT, client };
+export function changeTab(val) {
+  return { type: CHANGE_TAB, val };
+}
+
+export function toggleClient(client, selected) {
+  return { type: TOGGLE_CLIENT, client, selected };
 }
 
 export function addClient(id) {
   return (dispatch, getState) => {
     const viz = getState().main.viz;
     if (viz && viz.readyState === WebSocket.OPEN) {
-      viz.send(JSON.stringify({ type: 'ADD_INSTANCE', id }));
+      viz.send(JSON.stringify({ type: 'CREATE', id }));
     }
-    dispatch({ type: 'ADDING_CLIENT', id });
   };
 }
 
-export function removeClients() {
-  return (dispatch) => {
-    dispatch({ type: 'REMOVING_CLIENT', name });
+export function removeClient(id) {
+  return (dispatch, getState) => {
+    const viz = getState().main.viz;
+    if (viz && viz.readyState === WebSocket.OPEN) {
+      viz.send(JSON.stringify({ type: 'DELETE', id }));
+    }
+  };
+}
+
+export function deleteClients() {
+  return (dispatch, getState) => {
+    const { clients } = getState().main;
+    clients.filter(c => c.selected && !c.closed)
+      .forEach((c) => {
+        dispatch(toggleClient(c, false));
+        dispatch(removeClient(c.id));
+      });
+  };
+}
+
+export function createClients() {
+  return (dispatch, getState) => {
+    const { clients } = getState().main;
+    clients.filter(c => c.selected && c.closed)
+      .forEach((c) => {
+        dispatch(toggleClient(c, false));
+        dispatch(addClient(c.id));
+      });
   };
 }

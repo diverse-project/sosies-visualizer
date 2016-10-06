@@ -6,27 +6,21 @@ import Divider from 'material-ui/Divider';
 import Checkbox from 'material-ui/Checkbox';
 import RaisedButton from 'material-ui/RaisedButton';
 
-import { removeClients, toggleClient } from '../../core/actions/main';
+import { createClients, toggleClient } from '../../../core/actions/main';
 
-const ClientList = ({ clients, onRemoveClients, onToggleClient }) => (
+const ClientList = ({ clients, onCreateClients, onToggleClient }) => (
   <div>
-    <List>
-      <Subheader>Connected instances</Subheader>
-      {clients.filter(c => !c.closed).map((c, i) => (
-        <ListItem
-          key={i}
-          leftCheckbox={<Checkbox onCheck={() => onToggleClient(c)} />}
-          primaryText={c.id}
-        />
-      ))}
-    </List>
-    <Divider />
     <List>
       <Subheader>Disconnected instances</Subheader>
       {clients.filter(c => c.closed).map((c, i) => (
         <ListItem
           key={i}
-          leftCheckbox={<Checkbox onCheck={() => onToggleClient(c)} />}
+          leftCheckbox={
+            <Checkbox
+              checked={c.selected || false}
+              onCheck={() => onToggleClient(c, !c.selected)}
+            />
+          }
           primaryText={c.id}
         />
       ))}
@@ -34,10 +28,10 @@ const ClientList = ({ clients, onRemoveClients, onToggleClient }) => (
     <Divider />
     <div style={{ paddingTop: 10 }}>
       <RaisedButton
-        secondary
+        primary
         fullWidth
-        label="Delete selected instances"
-        onClick={onRemoveClients}
+        label="Re-create selected instances"
+        onClick={onCreateClients}
       />
     </div>
   </div>
@@ -45,11 +39,11 @@ const ClientList = ({ clients, onRemoveClients, onToggleClient }) => (
 
 ClientList.propTypes = {
   clients: React.PropTypes.array,
-  onRemoveClients: React.PropTypes.func,
   onToggleClient: React.PropTypes.func,
+  onCreateClients: React.PropTypes.func,
 };
 
 export default connect(
   state => ({ clients: state.main.clients }),
-  { onRemoveClients: removeClients, onToggleClient: toggleClient },
+  { onCreateClients: createClients, onToggleClient: toggleClient },
 )(ClientList);

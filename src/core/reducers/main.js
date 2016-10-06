@@ -1,6 +1,6 @@
 import {
   WS_OPEN, WS_CLOSE, WS_ERROR, PARSE_ERROR, UPDATE_CLIENTS, UPDATE_CLIENT,
-  UNKNOWN_MSG, CLIENT_CLOSE, TOGGLE_CLIENT, NEW_CLIENT,
+  UNKNOWN_MSG, CLIENT_CLOSE, TOGGLE_CLIENT, NEW_CLIENT, CHANGE_TAB,
 } from '../actions';
 import { arrayReplace } from '../utils';
 
@@ -8,6 +8,7 @@ const initialState = {
   state: 'disconnected',
   viz: null,
   clients: [],
+  activeTab: 0,
 };
 
 export default (state = initialState, action) => {
@@ -46,7 +47,7 @@ export default (state = initialState, action) => {
     case NEW_CLIENT:
       return {
         ...state,
-        clients: [...state.clients, action.client],
+        clients: arrayReplace(state.clients, action.client),
       };
 
     case UPDATE_CLIENTS:
@@ -75,8 +76,14 @@ export default (state = initialState, action) => {
         ...state,
         clients: arrayReplace(state.clients, {
           ...action.client,
-          selected: !action.client.selected,
+          selected: action.selected,
         }),
+      };
+
+    case CHANGE_TAB:
+      return {
+        ...state,
+        activeTab: action.val,
       };
 
     case UNKNOWN_MSG:

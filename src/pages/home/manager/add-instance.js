@@ -2,9 +2,11 @@ import React from 'react';
 import { connect } from 'react-redux';
 import TextField from 'material-ui/TextField';
 import RaisedButton from 'material-ui/RaisedButton';
+import IconButton from 'material-ui/IconButton';
+import AutoRenewIcon from 'material-ui/svg-icons/action/autorenew';
 
-import { addClient } from '../../core/actions/main';
-import { randomName } from '../../core/utils';
+import { addClient } from '../../../core/actions/main';
+import { randomName } from '../../../core/utils';
 
 class AddInstance extends React.Component {
   static propTypes = {
@@ -20,6 +22,11 @@ class AddInstance extends React.Component {
     this.state = { name: randomName() };
   }
 
+  doAddClient() {
+    this.setState({ name: randomName() });
+    this.props.onAddClient(this.state.name);
+  }
+
   render() {
     return (
       <div>
@@ -29,11 +36,14 @@ class AddInstance extends React.Component {
           value={this.state.name}
           floatingLabelText="Instance name"
           onChange={e => this.setState({ name: e.target.value })}
-        /><br />
+        />
+        <IconButton onClick={() => this.setState({ name: randomName() })}>
+          <AutoRenewIcon />
+        </IconButton>
         <RaisedButton
           primary
           label="Add instance"
-          onClick={() => this.props.onAddClient(this.state.name)}
+          onClick={() => this.doAddClient()}
         />
       </div>
     );

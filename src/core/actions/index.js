@@ -8,3 +8,4 @@ export const UPDATE_CLIENT = 'UPDATE_CLIENT';
 export const UNKNOWN_MSG = 'UNKNOWN_MSG';
 export const CLIENT_CLOSE = 'CLIENT_CLOSE';
 export const TOGGLE_CLIENT = 'TOGGLE_CLIENT';
+export const CHANGE_TAB = 'CHANGE_TAB';
