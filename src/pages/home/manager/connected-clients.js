@@ -12,7 +12,7 @@ const ClientList = ({ clients, onDeleteClients, onToggleClient }) => (
   <div>
     <List>
       <Subheader>Connected instances</Subheader>
-      {clients.filter(c => !c.closed).map((c, i) => (
+      {clients.map((c, i) => (
         <ListItem
           key={i}
           leftCheckbox={
@@ -31,6 +31,7 @@ const ClientList = ({ clients, onDeleteClients, onToggleClient }) => (
         secondary
         fullWidth
         label="Delete selected instances"
+        disabled={!clients.some(c => c.selected)}
         onClick={onDeleteClients}
       />
     </div>
@@ -44,6 +45,6 @@ ClientList.propTypes = {
 };
 
 export default connect(
-  state => ({ clients: state.main.clients }),
+  state => ({ clients: state.main.clients.filter(c => !c.closed) }),
   { onDeleteClients: deleteClients, onToggleClient: toggleClient },
 )(ClientList);

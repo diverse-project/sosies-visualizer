@@ -69,6 +69,12 @@ export function toggleClient(client, selected) {
   return { type: TOGGLE_CLIENT, client, selected };
 }
 
+export function toggleActivity(client, activity) {
+  return (dispatch) => {
+    //dispatch({ type: TOGGLE_ACTIVITY, client, activity });
+  };
+}
+
 export function addClient(id) {
   return (dispatch, getState) => {
     const viz = getState().main.viz;

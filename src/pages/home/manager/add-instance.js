@@ -4,6 +4,8 @@ import TextField from 'material-ui/TextField';
 import RaisedButton from 'material-ui/RaisedButton';
 import IconButton from 'material-ui/IconButton';
 import AutoRenewIcon from 'material-ui/svg-icons/action/autorenew';
+import { List } from 'material-ui/List';
+import Subheader from 'material-ui/Subheader';
 
 import { addClient } from '../../../core/actions/main';
 import { randomName } from '../../../core/utils';
@@ -29,8 +31,8 @@ class AddInstance extends React.Component {
 
   render() {
     return (
-      <div>
-        <p>Add another RingoJS instance that runs MdMS</p>
+      <List>
+        <Subheader>Add MdMS instance</Subheader>
         <TextField
           hintText={`eg. ${this.state.name}`}
           value={this.state.name}
@@ -43,9 +45,10 @@ class AddInstance extends React.Component {
         <RaisedButton
           primary
           label="Add instance"
+          disabled={this.state.name.length === 0}
           onClick={() => this.doAddClient()}
         />
-      </div>
+      </List>
     );
   }
 }

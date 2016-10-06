@@ -5,6 +5,7 @@ import { Row, Col } from 'react-flexbox-grid';
 import ConnectedClients from './connected-clients';
 import DisconnectedClients from './disconnected-clients';
 import AddInstance from './add-instance';
+import LoadBalancer from './load-balancer';
 
 import '../styles.css';
 
@@ -39,6 +40,13 @@ class Manager extends React.Component {
           <Paper zDepth={1}>
             <div style={{ padding: 10 }}>
               <AddInstance />
+            </div>
+          </Paper>
+        </Col>
+        <Col xs={12} sm={6} lg={3} className="col">
+          <Paper zDepth={1}>
+            <div style={{ padding: 10 }}>
+              <LoadBalancer />
             </div>
           </Paper>
         </Col>
