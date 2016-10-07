@@ -1,18 +1,26 @@
 import {
   WS_OPEN, WS_CLOSE, WS_ERROR, PARSE_ERROR, UPDATE_CLIENTS, UPDATE_CLIENT,
   UNKNOWN_MSG, CLIENT_CLOSE, TOGGLE_CLIENT, NEW_CLIENT, CHANGE_TAB,
+  TOGGLE_ACTIVITY, CLIENT_ANSWER, TOGGLE_DRAWER,
 } from '../actions';
-import { arrayReplace } from '../utils';
+import { arrayReplace, arrayPush } from '../utils';
 
 const initialState = {
   state: 'disconnected',
   viz: null,
   clients: [],
-  activeTab: 0,
+  drawerOpen: false,
 };
 
 export default (state = initialState, action) => {
   switch (action.type) {
+    case TOGGLE_DRAWER: {
+      return {
+        ...state,
+        drawerOpen: !state.drawerOpen,
+      };
+    }
+
     case WS_OPEN:
       return {
         ...state,
@@ -80,10 +88,28 @@ export default (state = initialState, action) => {
         }),
       };
 
+    case TOGGLE_ACTIVITY:
+      return {
+        ...state,
+        clients: arrayReplace(state.clients, {
+          ...action.client,
+          active: action.active,
+        }),
+      };
+
     case CHANGE_TAB:
       return {
         ...state,
         activeTab: action.val,
+      };
+
+    case CLIENT_ANSWER:
+      return {
+        ...state,
+        clients: arrayReplace(state.clients, {
+          ...action.client,
+          requests: arrayPush(action.client.requests, action.url, 10),
+        }),
       };
 
     case UNKNOWN_MSG:

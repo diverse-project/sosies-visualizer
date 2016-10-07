@@ -22,6 +22,7 @@ const ClientList = ({ clients, onCreateClients, onToggleClient }) => (
             />
           }
           primaryText={c.id}
+          secondaryText={`Port: ${c.port}`}
         />
       ))}
     </List>

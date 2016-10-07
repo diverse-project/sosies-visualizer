@@ -21,7 +21,8 @@ const ClientList = ({ clients, onDeleteClients, onToggleClient }) => (
               onCheck={() => onToggleClient(c, !c.selected)}
             />
           }
-          primaryText={`${c.id} - ${c.port}`}
+          primaryText={c.id}
+          secondaryText={`Port: ${c.port}`}
         />
       ))}
     </List>

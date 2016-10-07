@@ -1,25 +1,28 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Tabs, Tab } from 'material-ui/Tabs';
+import Drawer from 'material-ui/Drawer';
+import AppBar from 'material-ui/AppBar';
+import IconButton from 'material-ui/IconButton';
+import CloseIcon from 'material-ui/svg-icons/navigation/close';
+import { Row, Col } from 'react-flexbox-grid';
 
 import Layout from '../../components/Layout';
+import Visualizer from '../../components/Visualizer';
 
-import { connect as doConnect, changeTab } from '../../core/actions/main';
-import Logs from './logs';
+import { connect as doConnect, toggleDrawer, toggleActivity } from '../../core/actions/main';
 import Manager from './manager';
 
 import './styles.css';
-
-const LOGS_TAB = 0;
-const MANAGER_TAB = 1;
 
 class HomePage extends React.Component {
 
   static propTypes = {
     state: React.PropTypes.oneOf(['disconnected', 'connected', 'error']),
-    activeTab: React.PropTypes.number,
-    changeTab: React.PropTypes.func,
+    clients: React.PropTypes.array,
+    drawerOpen: React.PropTypes.bool,
     doConnect: React.PropTypes.func,
+    toggleDrawer: React.PropTypes.func,
+    toggleActivity: React.PropTypes.func,
   };
 
   componentDidMount() {
@@ -29,22 +32,32 @@ class HomePage extends React.Component {
   render() {
     return (
       <Layout connected={this.props.state === 'connected'}>
-        <Tabs value={this.props.activeTab}>
-          <Tab
-            value={LOGS_TAB}
-            label="Live Logs"
-            onActive={() => this.props.changeTab(LOGS_TAB)}
-          >
-            <Logs isActive={this.props.activeTab === LOGS_TAB} />
-          </Tab>
-          <Tab
-            value={MANAGER_TAB}
-            label="Manage Instances"
-            onActive={() => this.props.changeTab(MANAGER_TAB)}
-          >
-            <Manager isActive={this.props.activeTab === MANAGER_TAB} />
-          </Tab>
-        </Tabs>
+        <Row className="row">
+          {this.props.clients.map((client, i) => (
+            <Col key={i} xs={12} sm={6} lg={2} className="col">
+              <Visualizer client={client} onToggleActivity={this.props.toggleActivity} />
+            </Col>
+          ))}
+          {this.props.clients.length === 0 &&
+            <p style={{ paddingLeft: 10 }}>No client connected yet.</p>}
+        </Row>
+        <Drawer
+          openSecondary
+          open={this.props.drawerOpen}
+          width={350}
+        >
+          <AppBar
+            title="Manage instances"
+            titleStyle={{ height: 48, lineHeight: '48px' }}
+            iconStyleLeft={{ marginTop: 0 }}
+            iconElementLeft={
+              <IconButton onClick={this.props.toggleDrawer}>
+                <CloseIcon />
+              </IconButton>
+            }
+          />
+          <Manager isActive={this.props.drawerOpen} />
+        </Drawer>
       </Layout>
     );
   }
@@ -53,7 +66,8 @@ class HomePage extends React.Component {
 export default connect(
   state => ({
     state: state.main.state,
-    activeTab: state.main.activeTab,
+    clients: state.main.clients,
+    drawerOpen: state.main.drawerOpen,
   }),
-  { changeTab, doConnect }
+  { toggleDrawer, doConnect, toggleActivity }
 )(HomePage);

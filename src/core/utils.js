@@ -28,6 +28,14 @@ export function arrayReplace(array, value) {
   ];
 }
 
+export function arrayPush(array = [], value, maxLength) {
+  const newArray = [...array, value];
+  while (newArray.length >= maxLength) {
+    newArray.shift();
+  }
+  return newArray;
+}
+
 export function arrayRemove(array, id) {
   const index = array.findIndex(i => i.id === id);
   if (index === -1) {
