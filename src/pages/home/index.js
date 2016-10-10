@@ -43,7 +43,7 @@ class HomePage extends React.Component {
         </Row>
         <Drawer
           openSecondary
-          open={this.props.drawerOpen}
+          open={this.props.state === 'connected' && this.props.drawerOpen}
           width={350}
         >
           <AppBar

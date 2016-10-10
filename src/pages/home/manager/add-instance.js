@@ -62,7 +62,11 @@ class AddInstance extends React.Component {
           <AutoRenewIcon />
         </IconButton>
         <br />
-        <SelectField value={this.state.selectedSosie} onChange={this.handleChange}>
+        <SelectField
+          value={this.state.selectedSosie}
+          floatingLabelText="Sosie type"
+          onChange={this.handleChange}
+        >
           {SOSIES.map((sosie, i) => (
             <MenuItem key={i} value={sosie} primaryText={sosie} />
           ))}
